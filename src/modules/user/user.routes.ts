@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { authenticate } from '@/middlewares/auth';
 import { validateRequest } from '@/middlewares/validateRequest';
-import { updateMeValidation, updateUserStatusValidation } from './user.validation';
+import {
+  listUsersValidation,
+  updateMeValidation,
+  updateUserStatusValidation,
+} from './user.validation';
 import { UserController } from './user.controller';
 
 const router = Router();
@@ -9,7 +13,7 @@ const router = Router();
 router.get('/me', authenticate(), UserController.getMe);
 router.patch('/me', authenticate(), validateRequest(updateMeValidation), UserController.updateMe);
 
-router.get('/', authenticate('ADMIN'), UserController.listUsers);
+router.get('/', authenticate('ADMIN'), validateRequest(listUsersValidation), UserController.listUsers);
 router.get('/:id', authenticate('ADMIN'), UserController.getUserById);
 router.patch(
   '/:id/status',

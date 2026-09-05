@@ -3,6 +3,7 @@ import { authenticate } from '@/middlewares/auth';
 import { validateRequest } from '@/middlewares/validateRequest';
 import {
   createAssessmentValidation,
+  listAssessmentsValidation,
   updateAssessmentValidation,
 } from './assessment.validation';
 import { AssessmentController } from './assessment.controller';
@@ -20,7 +21,12 @@ router.post(
   validateRequest(createAssessmentValidation),
   AssessmentController.createAssessment,
 );
-router.get('/', authenticate('COMPANY'), AssessmentController.listMyAssessments);
+router.get(
+  '/',
+  authenticate('COMPANY'),
+  validateRequest(listAssessmentsValidation),
+  AssessmentController.listMyAssessments,
+);
 router.get('/:id', authenticate('COMPANY', 'ADMIN'), AssessmentController.getAssessment);
 router.patch(
   '/:id',
