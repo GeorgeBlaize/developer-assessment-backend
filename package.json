@@ -1,5 +1,5 @@
 {
-  "name": "dev-assessment-platform-backend",
+  "name": "developer-assessment-backend",
   "version": "1.0.0",
   "description": "Developer Assessment & Coding Platform - Backend API",
   "main": "dist/server.js",
