@@ -44,4 +44,16 @@ const listMyAttempts = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: httpStatus.OK, message: 'Attempts fetched successfully', data: result });
 });
 
-export const AttemptController = { startAttempt, getAttempt, submitAnswer, finishAttempt, listMyAttempts };
+const listAttemptsForAssessment = catchAsync(async (req: Request, res: Response) => {
+  const result = await AttemptService.listAttemptsForAssessment(req.user!.userId, req.user!.role, req.params.id);
+  sendResponse(res, { statusCode: httpStatus.OK, message: 'Assessment results fetched successfully', data: result });
+});
+
+export const AttemptController = {
+  startAttempt,
+  getAttempt,
+  submitAnswer,
+  finishAttempt,
+  listMyAttempts,
+  listAttemptsForAssessment,
+};

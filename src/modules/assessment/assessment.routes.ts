@@ -10,6 +10,7 @@ import { ProblemRoutes } from '../problem/problem.routes';
 import { InvitationRoutes } from '../invitation/invitation.routes';
 import { SubmissionRoutes } from '../submission/submission.routes';
 import { AnalyticsController } from '../analytics/analytics.controller';
+import { AttemptController } from '../attempt/attempt.controller';
 
 const router = Router();
 
@@ -31,6 +32,7 @@ router.patch('/:id/publish', authenticate('COMPANY'), AssessmentController.publi
 router.patch('/:id/archive', authenticate('COMPANY'), AssessmentController.archiveAssessment);
 router.delete('/:id', authenticate('COMPANY'), AssessmentController.deleteAssessment);
 router.get('/:id/analytics', authenticate('COMPANY', 'ADMIN'), AnalyticsController.getAssessmentAnalytics);
+router.get('/:id/attempts', authenticate('COMPANY', 'ADMIN'), AttemptController.listAttemptsForAssessment);
 
 router.use('/:assessmentId/problems', ProblemRoutes);
 router.use('/:assessmentId/invitations', InvitationRoutes);

@@ -204,6 +204,28 @@ const finishAttempt = async (userId: string, attemptId: string) => {
   return prisma.attempt.findUnique({ where: { id: attemptId } });
 };
 
+const listAttemptsForAssessment = async (userId: string, role: string, assessmentId: string) => {
+  const assessment = await prisma.assessment.findUnique({
+    where: { id: assessmentId },
+    include: { company: true },
+  });
+  if (!assessment || assessment.deletedAt) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Assessment not found');
+  }
+  if (role === 'COMPANY' && assessment.company.userId !== userId) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You do not own this assessment');
+  }
+
+  return prisma.attempt.findMany({
+    where: { assessmentId, deletedAt: null },
+    include: {
+      candidate: { include: { user: { select: { name: true, email: true } } } },
+      _count: { select: { submissions: true } },
+    },
+    orderBy: [{ status: 'asc' }, { totalScore: 'desc' }],
+  });
+};
+
 const listMyAttempts = async (userId: string) => {
   const candidateProfile = await prisma.candidateProfile.findUnique({ where: { userId } });
   if (!candidateProfile) {
@@ -222,5 +244,6 @@ export const AttemptService = {
   submitAnswer,
   finishAttempt,
   listMyAttempts,
+  listAttemptsForAssessment,
   recomputeAttemptScore,
 };

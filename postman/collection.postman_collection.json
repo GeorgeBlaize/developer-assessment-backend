@@ -339,6 +339,7 @@
         { "name": "Archive Assessment", "request": { "method": "PATCH", "url": "{{baseUrl}}/assessments/{{assessmentId}}/archive" } },
         { "name": "Delete Assessment (soft delete)", "request": { "method": "DELETE", "url": "{{baseUrl}}/assessments/{{assessmentId}}" } },
         { "name": "Get Assessment Analytics", "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}/analytics" } },
+        { "name": "Get Assessment Results (per-candidate attempts)", "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}/attempts" } },
         {
           "name": "Access another company's assessment (403 demo)",
           "request": { "method": "GET", "url": "{{baseUrl}}/assessments/00000000-0000-0000-0000-000000000000" }
