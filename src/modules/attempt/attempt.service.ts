@@ -238,6 +238,23 @@ const listMyAttempts = async (userId: string) => {
   });
 };
 
+const sweepExpiredAttempts = async () => {
+  const expired = await prisma.attempt.findMany({
+    where: { status: 'IN_PROGRESS', expiresAt: { lt: new Date() } },
+    select: { id: true },
+  });
+
+  for (const { id } of expired) {
+    await prisma.attempt.update({
+      where: { id },
+      data: { status: 'EXPIRED', submittedAt: new Date() },
+    });
+    await recomputeAttemptScore(id);
+  }
+
+  return { expiredCount: expired.length };
+};
+
 export const AttemptService = {
   startAttempt,
   getAttemptForCandidate,
@@ -246,4 +263,5 @@ export const AttemptService = {
   listMyAttempts,
   listAttemptsForAssessment,
   recomputeAttemptScore,
+  sweepExpiredAttempts,
 };
