@@ -26,25 +26,53 @@ const subscribe = catchAsync(async (req: Request, res: Response) => {
 const success = catchAsync(async (req: Request, res: Response) => {
   const { tran_id: tranId, val_id: valId } = { ...req.body, ...req.query };
   const payment = await PaymentService.handleGatewayCallback(tranId, valId, 'success');
+  await recordAuditLog({
+    action: 'PAYMENT_SUCCESS',
+    entityType: 'Payment',
+    entityId: payment.id,
+    metadata: { tranId },
+    ipAddress: req.ip,
+  });
   sendResponse(res, { statusCode: httpStatus.OK, message: 'Payment successful. Subscription activated.', data: payment });
 });
 
 const fail = catchAsync(async (req: Request, res: Response) => {
   const { tran_id: tranId } = { ...req.body, ...req.query };
   const payment = await PaymentService.handleGatewayCallback(tranId, undefined, 'fail');
+  await recordAuditLog({
+    action: 'PAYMENT_FAILED',
+    entityType: 'Payment',
+    entityId: payment.id,
+    metadata: { tranId },
+    ipAddress: req.ip,
+  });
   sendResponse(res, { statusCode: httpStatus.OK, message: 'Payment failed.', data: payment });
 });
 
 const cancel = catchAsync(async (req: Request, res: Response) => {
   const { tran_id: tranId } = { ...req.body, ...req.query };
   const payment = await PaymentService.handleGatewayCallback(tranId, undefined, 'cancel');
+  await recordAuditLog({
+    action: 'PAYMENT_CANCELLED',
+    entityType: 'Payment',
+    entityId: payment.id,
+    metadata: { tranId },
+    ipAddress: req.ip,
+  });
   sendResponse(res, { statusCode: httpStatus.OK, message: 'Payment cancelled.', data: payment });
 });
 
 const ipn = catchAsync(async (req: Request, res: Response) => {
   const { tran_id: tranId, val_id: valId, status } = { ...req.body, ...req.query };
   const outcome = status === 'VALID' || status === 'VALIDATED' ? 'success' : 'fail';
-  await PaymentService.handleGatewayCallback(tranId, valId, outcome);
+  const payment = await PaymentService.handleGatewayCallback(tranId, valId, outcome);
+  await recordAuditLog({
+    action: 'PAYMENT_IPN',
+    entityType: 'Payment',
+    entityId: payment.id,
+    metadata: { tranId, status },
+    ipAddress: req.ip,
+  });
   sendResponse(res, { statusCode: httpStatus.OK, message: 'IPN processed', data: null });
 });
 
