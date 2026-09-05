@@ -20,6 +20,11 @@ const listUsers = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: httpStatus.OK, message: 'Users fetched successfully', data: users, meta });
 });
 
+const getUserById = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getUserById(req.params.id);
+  sendResponse(res, { statusCode: httpStatus.OK, message: 'User fetched successfully', data: result });
+});
+
 const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.updateUserStatus(req.params.id, req.body.isActive);
   await recordAuditLog({
@@ -45,4 +50,4 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: httpStatus.OK, message: 'User deleted successfully', data: null });
 });
 
-export const UserController = { getMe, updateMe, listUsers, updateUserStatus, deleteUser };
+export const UserController = { getMe, updateMe, listUsers, getUserById, updateUserStatus, deleteUser };

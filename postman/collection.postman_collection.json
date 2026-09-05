@@ -179,6 +179,14 @@
           }
         },
         {
+          "name": "Get User By Id (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users/{{userId}}",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] }
+          }
+        },
+        {
           "name": "Update User Status (Admin)",
           "request": {
             "method": "PATCH",
@@ -539,6 +547,14 @@
           "request": {
             "method": "GET",
             "url": "{{baseUrl}}/admin/stats",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] }
+          }
+        },
+        {
+          "name": "Sweep Expired Attempts",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/admin/attempts/sweep-expired",
             "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] }
           }
         }

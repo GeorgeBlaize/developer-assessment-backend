@@ -10,6 +10,7 @@ router.get('/me', authenticate(), UserController.getMe);
 router.patch('/me', authenticate(), validateRequest(updateMeValidation), UserController.updateMe);
 
 router.get('/', authenticate('ADMIN'), UserController.listUsers);
+router.get('/:id', authenticate('ADMIN'), UserController.getUserById);
 router.patch(
   '/:id/status',
   authenticate('ADMIN'),

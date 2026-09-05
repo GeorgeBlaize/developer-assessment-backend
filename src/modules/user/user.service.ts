@@ -102,6 +102,20 @@ const listUsers = async (query: ListUsersQuery) => {
   return { users, meta: buildMeta(page, limit, total) };
 };
 
+const getUserById = async (targetUserId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    include: { companyProfile: { include: { plan: true } }, candidateProfile: true },
+  });
+
+  if (!user || user.deletedAt) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const { password: _password, ...safeUser } = user;
+  return safeUser;
+};
+
 const updateUserStatus = async (targetUserId: string, isActive: boolean) => {
   const user = await prisma.user.findUnique({ where: { id: targetUserId } });
   if (!user || user.deletedAt) {
@@ -137,6 +151,7 @@ export const UserService = {
   getMe,
   updateMe,
   listUsers,
+  getUserById,
   updateUserStatus,
   softDeleteUser,
 };

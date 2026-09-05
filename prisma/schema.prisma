@@ -323,6 +323,7 @@ model Attempt {
   @@index([candidateId])
   @@index([assessmentId])
   @@index([status])
+  @@index([status, expiresAt])
   @@map("attempts")
 }
 
