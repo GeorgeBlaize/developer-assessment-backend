@@ -11,15 +11,23 @@ Follow these steps to get real credentials for every mandatory integration, then
 
 ## 2. Google OAuth (Social Login)
 
+This backend accepts a Google **ID token** at `POST /api/v1/auth/google` (`{ "idToken": "..." }`) and verifies it server-side with `google-auth-library` — no redirect-based server flow needed. That's the same token a frontend would get from Google Identity Services / `@react-oauth/google`.
+
 1. https://console.cloud.google.com -> **New Project**.
 2. **APIs & Services -> OAuth consent screen** -> External -> fill app name/support email -> add scopes `email`, `profile`, `openid` -> add yourself as a test user.
 3. **APIs & Services -> Credentials -> + Create Credentials -> OAuth client ID** -> Web application.
-4. Authorized redirect URIs:
-   - `http://localhost:5000/api/v1/auth/google/callback`
-   - `https://<your-vercel-app>.vercel.app/api/v1/auth/google/callback` (add after first deploy)
+4. Authorized redirect URIs: add `https://developers.google.com/oauthplayground` — this lets you generate a real ID token **for Postman testing** without building a frontend (see below).
 5. Copy Client ID / Client Secret into `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`.
 
-> Note: this backend accepts a Google **ID token** at `POST /api/v1/auth/google` (`{ "idToken": "..." }`), the same token a frontend gets from Google Identity Services / `@react-oauth/google`. It verifies the token server-side with `google-auth-library` — no redirect-based server flow is required.
+**To get a testable ID token for Postman:**
+
+1. Go to https://developers.google.com/oauthplayground
+2. Click the gear icon (top right) -> check **"Use your own OAuth credentials"** -> paste your `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+3. In the left panel, scopes: select `https://www.googleapis.com/auth/userinfo.email` and `.../userinfo.profile` (or just type `openid email profile`) -> **Authorize APIs** -> sign in with any Google account.
+4. Click **Exchange authorization code for tokens** -> copy the `id_token` value.
+5. Use that value as `idToken` in the "Google Login" request in the Postman collection.
+
+This produces a real Google-signed ID token whose audience is *your* client ID, exactly what a frontend Google Sign-In button would hand your backend — so it exercises the real verification path in `auth.service.ts`, not a mock.
 
 ## 3. SSLCommerz Sandbox
 
