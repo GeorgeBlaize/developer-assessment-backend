@@ -1,0 +1,547 @@
+{
+  "info": {
+    "name": "Developer Assessment & Coding Platform API",
+    "description": "Full API collection for the Developer Assessment & Coding Platform backend (B7A6 Assignment #4). Roles: ADMIN, COMPANY, CANDIDATE. Set the `CodeAssess Local` environment, run requests top-to-bottom within a folder to auto-populate chained variables (assessmentId, problemId, invitationId, attemptId, submissionId) via each request's Tests script.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:5000/api/v1" }],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Company",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Demo Recruiter\",\n  \"email\": \"company1@example.com\",\n  \"password\": \"Passw0rd!\",\n  \"role\": \"COMPANY\",\n  \"companyName\": \"Acme Tech Ltd.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Candidate",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Demo Candidate\",\n  \"email\": \"candidate1@example.com\",\n  \"password\": \"Passw0rd!\",\n  \"role\": \"CANDIDATE\",\n  \"phone\": \"01700000000\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Company/Candidate)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success) {",
+                  "  pm.environment.set('accessToken', json.data.accessToken);",
+                  "  pm.environment.set('refreshToken', json.data.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"company@demo.dev\",\n  \"password\": \"Company@12345\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success) {",
+                  "  pm.environment.set('adminAccessToken', json.data.accessToken);",
+                  "  pm.environment.set('adminRefreshToken', json.data.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@codeassess.dev\",\n  \"password\": \"Admin@12345\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login with invalid password (401 demo)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"company@demo.dev\",\n  \"password\": \"wrong-password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register with invalid email (400 validation demo)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bad Email\",\n  \"email\": \"not-an-email\",\n  \"password\": \"123\",\n  \"role\": \"CANDIDATE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Google Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/google",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"<google-id-token-from-frontend-sign-in>\",\n  \"role\": \"CANDIDATE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/refresh-token",
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/change-password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"Company@12345\",\n  \"newPassword\": \"NewPassw0rd!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/logout",
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        { "name": "Get My Profile", "request": { "method": "GET", "url": "{{baseUrl}}/users/me" } },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/users/me",
+            "body": { "mode": "raw", "raw": "{\n  \"companyName\": \"Acme Tech Ltd (Updated)\"\n}" }
+          }
+        },
+        {
+          "name": "List Users (Admin, paginated+search+filter)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users?page=1&limit=10&role=CANDIDATE&search=demo",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] }
+          }
+        },
+        {
+          "name": "Update User Status (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/users/{{userId}}/status",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" }
+          }
+        },
+        {
+          "name": "Delete User (Admin, soft delete)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/users/{{userId}}",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Plans",
+      "item": [
+        { "name": "List Plans (Public)", "request": { "method": "GET", "url": "{{baseUrl}}/plans" } },
+        {
+          "name": "Create Plan (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/plans",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"BASIC\",\n  \"price\": 999,\n  \"durationDays\": 30,\n  \"maxActiveAssessments\": 5,\n  \"maxInvitesPerAssessment\": 50,\n  \"features\": [\"5 active assessments\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Plan (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/plans/{{planId}}",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 1199\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments (SSLCommerz)",
+      "item": [
+        {
+          "name": "Subscribe to Plan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data && json.data.gatewayPageURL) {",
+                  "  console.log('Open this URL in a browser to complete sandbox payment:', json.data.gatewayPageURL);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/payments/subscribe",
+            "body": { "mode": "raw", "raw": "{\n  \"planId\": \"{{planId}}\"\n}" }
+          }
+        },
+        { "name": "List My Payments", "request": { "method": "GET", "url": "{{baseUrl}}/payments" } },
+        {
+          "name": "SSLCommerz Success Callback (simulated)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "url": "{{baseUrl}}/payments/success",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "tran_id", "value": "SUB-xxxxxxxx" },
+                { "key": "val_id", "value": "xxxxxxxxxxxx" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "SSLCommerz Fail Callback (simulated)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "url": "{{baseUrl}}/payments/fail",
+            "body": { "mode": "urlencoded", "urlencoded": [{ "key": "tran_id", "value": "SUB-xxxxxxxx" }] }
+          }
+        },
+        {
+          "name": "SSLCommerz IPN (simulated)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "url": "{{baseUrl}}/payments/ipn",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "tran_id", "value": "SUB-xxxxxxxx" },
+                { "key": "val_id", "value": "xxxxxxxxxxxx" },
+                { "key": "status", "value": "VALID" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assessments (Company)",
+      "item": [
+        {
+          "name": "Create Assessment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success) { pm.environment.set('assessmentId', json.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Backend Engineer Screening\",\n  \"description\": \"A short screening test.\",\n  \"durationMinutes\": 30,\n  \"passingScore\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "List My Assessments (paginated+filter+search)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/assessments?page=1&limit=10&status=DRAFT&search=Backend" }
+        },
+        { "name": "Get Assessment by Id", "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}" } },
+        {
+          "name": "Update Assessment (DRAFT only)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments/{{assessmentId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"passingScore\": 15\n}" }
+          }
+        },
+        { "name": "Publish Assessment", "request": { "method": "PATCH", "url": "{{baseUrl}}/assessments/{{assessmentId}}/publish" } },
+        { "name": "Archive Assessment", "request": { "method": "PATCH", "url": "{{baseUrl}}/assessments/{{assessmentId}}/archive" } },
+        { "name": "Delete Assessment (soft delete)", "request": { "method": "DELETE", "url": "{{baseUrl}}/assessments/{{assessmentId}}" } },
+        { "name": "Get Assessment Analytics", "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}/analytics" } },
+        {
+          "name": "Access another company's assessment (403 demo)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/assessments/00000000-0000-0000-0000-000000000000" }
+        }
+      ]
+    },
+    {
+      "name": "Problems (nested under Assessment)",
+      "item": [
+        {
+          "name": "Add MCQ Problem",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success) { pm.environment.set('problemId', json.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments/{{assessmentId}}/problems",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"MCQ\",\n  \"title\": \"Which keyword declares a block-scoped variable?\",\n  \"description\": \"Select the correct option.\",\n  \"marks\": 10,\n  \"options\": [\n    { \"text\": \"var\", \"isCorrect\": false },\n    { \"text\": \"let\", \"isCorrect\": true },\n    { \"text\": \"function\", \"isCorrect\": false }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Coding Problem",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments/{{assessmentId}}/problems",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"CODING\",\n  \"title\": \"Reverse a string\",\n  \"description\": \"Implement reverseString(str).\",\n  \"marks\": 20,\n  \"languageHint\": \"javascript\",\n  \"starterCode\": \"function reverseString(str) {\\n  // your code\\n}\",\n  \"testCases\": [{ \"input\": \"\\\"hello\\\"\", \"expectedOutput\": \"\\\"olleh\\\"\" }]\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Written Problem",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments/{{assessmentId}}/problems",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"WRITTEN\",\n  \"title\": \"Explain database indexing\",\n  \"description\": \"In 3-5 sentences, explain database indexing.\",\n  \"marks\": 10\n}"
+            }
+          }
+        },
+        { "name": "List Problems", "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}/problems" } },
+        {
+          "name": "Update Problem",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments/{{assessmentId}}/problems/{{problemId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"marks\": 15\n}" }
+          }
+        },
+        {
+          "name": "Delete Problem",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/assessments/{{assessmentId}}/problems/{{problemId}}" }
+        }
+      ]
+    },
+    {
+      "name": "Invitations",
+      "item": [
+        {
+          "name": "Invite Candidates (Company)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments/{{assessmentId}}/invitations",
+            "body": { "mode": "raw", "raw": "{\n  \"emails\": [\"candidate@demo.dev\"],\n  \"expiresInDays\": 7\n}" }
+          }
+        },
+        {
+          "name": "List Invitations For Assessment (Company)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}/invitations" }
+        },
+        {
+          "name": "My Invitations (Candidate)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/invitations/me" }
+        },
+        {
+          "name": "Respond to Invitation - Accept (Candidate)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success) { pm.environment.set('invitationId', json.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/invitations/{{invitationId}}/respond",
+            "body": { "mode": "raw", "raw": "{\n  \"action\": \"ACCEPT\"\n}" }
+          }
+        },
+        {
+          "name": "Start Attempt (Candidate)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success) { pm.environment.set('attemptId', json.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "POST", "url": "{{baseUrl}}/invitations/{{invitationId}}/start" }
+        }
+      ]
+    },
+    {
+      "name": "Attempts (Candidate)",
+      "item": [
+        { "name": "List My Attempts", "request": { "method": "GET", "url": "{{baseUrl}}/attempts" } },
+        { "name": "Get Attempt (with problems, no answer keys)", "request": { "method": "GET", "url": "{{baseUrl}}/attempts/{{attemptId}}" } },
+        {
+          "name": "Submit MCQ Answer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/attempts/{{attemptId}}/submit",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"problemId\": \"{{problemId}}\",\n  \"selectedOptionId\": \"<option-id-from-get-attempt-response>\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Submit Written/Coding Answer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/attempts/{{attemptId}}/submit",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"problemId\": \"{{problemId}}\",\n  \"answerText\": \"function reverseString(str) { return str.split('').reverse().join(''); }\"\n}"
+            }
+          }
+        },
+        { "name": "Finish Attempt", "request": { "method": "POST", "url": "{{baseUrl}}/attempts/{{attemptId}}/finish" } }
+      ]
+    },
+    {
+      "name": "Submissions & Grading (Company)",
+      "item": [
+        {
+          "name": "List Submissions For Assessment",
+          "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}/submissions?status=PENDING" }
+        },
+        {
+          "name": "Grade a Submission (manual)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/assessments/{{assessmentId}}/submissions/{{submissionId}}/grade",
+            "body": { "mode": "raw", "raw": "{\n  \"awardedMarks\": 18,\n  \"feedback\": \"Correct approach, minor style issues.\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Company Dashboard",
+      "item": [{ "name": "Get My Company Dashboard", "request": { "method": "GET", "url": "{{baseUrl}}/companies/me/dashboard" } }]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List Audit Logs (paginated+filter)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/audit-logs?page=1&limit=20&entityType=Assessment",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] }
+          }
+        },
+        {
+          "name": "Get Platform Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/stats",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminAccessToken}}" }] }
+          }
+        }
+      ]
+    }
+  ]
+}
