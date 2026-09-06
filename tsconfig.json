@@ -22,6 +22,6 @@
     "sourceMap": false,
     "removeComments": true
   },
-  "include": ["src/**/*.ts", "prisma/**/*.ts", "api/**/*.ts"],
+  "include": ["src/**/*.ts", "prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
