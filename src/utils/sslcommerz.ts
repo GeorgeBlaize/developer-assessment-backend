@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { config } from '@/config';
+import { config } from '../config';
 
 const BASE_URL = config.sslcommerz.isLive
   ? 'https://securepay.sslcommerz.com'

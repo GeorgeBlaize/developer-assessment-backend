@@ -3,10 +3,10 @@ import crypto from 'crypto';
 import httpStatus from 'http-status';
 import { OAuth2Client } from 'google-auth-library';
 import { AuthProvider, Role } from '@prisma/client';
-import { prisma } from '@/db/prisma';
-import { config } from '@/config';
-import { AppError } from '@/errors/AppError';
-import { signToken, verifyToken } from '@/utils/jwt';
+import { prisma } from '../../db/prisma';
+import { config } from '../../config';
+import { AppError } from '../../errors/AppError';
+import { signToken, verifyToken } from '../../utils/jwt';
 
 const googleClient = new OAuth2Client(config.google.clientId);
 

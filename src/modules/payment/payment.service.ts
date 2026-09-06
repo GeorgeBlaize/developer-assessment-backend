@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
 import httpStatus from 'http-status';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
-import { initiatePayment, validatePayment } from '@/utils/sslcommerz';
-import { parsePagination, buildMeta, PaginationQuery } from '@/utils/queryBuilder';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
+import { initiatePayment, validatePayment } from '../../utils/sslcommerz';
+import { parsePagination, buildMeta, PaginationQuery } from '../../utils/queryBuilder';
 
 const subscribe = async (userId: string, planId: string) => {
   const companyProfile = await prisma.companyProfile.findUnique({ where: { userId } });

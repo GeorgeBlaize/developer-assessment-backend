@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { catchAsync } from '@/utils/catchAsync';
-import { sendResponse } from '@/utils/sendResponse';
-import { recordAuditLog } from '@/utils/auditLog';
+import { catchAsync } from '../../utils/catchAsync';
+import { sendResponse } from '../../utils/sendResponse';
+import { recordAuditLog } from '../../utils/auditLog';
 import { UserService } from './user.service';
 
 const getMe = catchAsync(async (req: Request, res: Response) => {

@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { Prisma } from '@prisma/client';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
 
 const listPlans = async () => {
   return prisma.plan.findMany({ where: { isActive: true }, orderBy: { price: 'asc' } });

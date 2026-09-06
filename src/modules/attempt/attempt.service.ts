@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { Attempt } from '@prisma/client';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
 
 const recomputeAttemptScore = async (attemptId: string) => {
   const attempt = await prisma.attempt.findUnique({

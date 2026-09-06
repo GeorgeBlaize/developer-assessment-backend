@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
-import { config } from '@/config';
-import { AppError } from '@/errors/AppError';
-import { handleZodError } from '@/errors/handleZodError';
-import { handlePrismaError } from '@/errors/handlePrismaError';
+import { config } from '../config';
+import { AppError } from '../errors/AppError';
+import { handleZodError } from '../errors/handleZodError';
+import { handlePrismaError } from '../errors/handlePrismaError';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const globalErrorHandler = (

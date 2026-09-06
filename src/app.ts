@@ -4,11 +4,11 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import httpStatus from 'http-status';
-import { config } from '@/config';
-import { routes } from '@/routes';
-import { globalErrorHandler } from '@/middlewares/globalErrorHandler';
-import { notFound } from '@/middlewares/notFound';
-import { globalRateLimiter } from '@/middlewares/rateLimiter';
+import { config } from './config';
+import { routes } from './routes';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
+import { notFound } from './middlewares/notFound';
+import { globalRateLimiter } from './middlewares/rateLimiter';
 
 const app: Application = express();
 

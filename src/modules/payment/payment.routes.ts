@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authenticate } from '@/middlewares/auth';
-import { validateRequest } from '@/middlewares/validateRequest';
+import { authenticate } from '../../middlewares/auth';
+import { validateRequest } from '../../middlewares/validateRequest';
 import { subscribeValidation } from './payment.validation';
 import { PaymentController } from './payment.controller';
 

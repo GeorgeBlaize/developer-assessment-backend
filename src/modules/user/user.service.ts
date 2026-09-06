@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
 import { Prisma, Role } from '@prisma/client';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
-import { parsePagination, buildMeta, PaginationQuery } from '@/utils/queryBuilder';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
+import { parsePagination, buildMeta, PaginationQuery } from '../../utils/queryBuilder';
 
 const getMe = async (userId: string) => {
   const user = await prisma.user.findUnique({

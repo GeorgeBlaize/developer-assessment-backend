@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { ProblemType } from '@prisma/client';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
 
 const assertOwnedDraftAssessment = async (userId: string, assessmentId: string) => {
   const assessment = await prisma.assessment.findUnique({

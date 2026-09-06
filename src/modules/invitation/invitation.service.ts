@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto';
 import httpStatus from 'http-status';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
 
 const getOwnedPublishedAssessment = async (userId: string, assessmentId: string) => {
   const assessment = await prisma.assessment.findUnique({

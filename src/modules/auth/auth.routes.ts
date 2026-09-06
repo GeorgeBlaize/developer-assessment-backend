@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { validateRequest } from '@/middlewares/validateRequest';
-import { authenticate } from '@/middlewares/auth';
-import { authRateLimiter } from '@/middlewares/rateLimiter';
+import { validateRequest } from '../../middlewares/validateRequest';
+import { authenticate } from '../../middlewares/auth';
+import { authRateLimiter } from '../../middlewares/rateLimiter';
 import {
   changePasswordValidation,
   googleLoginValidation,

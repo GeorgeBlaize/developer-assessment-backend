@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { Role } from '@prisma/client';
-import { config } from '@/config';
-import { AppError } from '@/errors/AppError';
-import { catchAsync } from '@/utils/catchAsync';
-import { verifyToken } from '@/utils/jwt';
-import { prisma } from '@/db/prisma';
+import { config } from '../config';
+import { AppError } from '../errors/AppError';
+import { catchAsync } from '../utils/catchAsync';
+import { verifyToken } from '../utils/jwt';
+import { prisma } from '../db/prisma';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

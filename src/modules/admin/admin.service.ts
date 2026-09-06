@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
-import { prisma } from '@/db/prisma';
-import { parsePagination, buildMeta, PaginationQuery } from '@/utils/queryBuilder';
+import { prisma } from '../../db/prisma';
+import { parsePagination, buildMeta, PaginationQuery } from '../../utils/queryBuilder';
 
 interface ListAuditLogsQuery extends PaginationQuery {
   entityType?: string;

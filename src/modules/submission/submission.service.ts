@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
 import { AttemptService } from '../attempt/attempt.service';
 
 const assertOwnedAssessment = async (userId: string, role: string, assessmentId: string) => {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authenticate } from '@/middlewares/auth';
-import { validateRequest } from '@/middlewares/validateRequest';
+import { authenticate } from '../../middlewares/auth';
+import { validateRequest } from '../../middlewares/validateRequest';
 import { createProblemValidation, updateProblemValidation } from './problem.validation';
 import { ProblemController } from './problem.controller';
 

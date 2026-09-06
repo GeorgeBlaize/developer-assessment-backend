@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
 import { Prisma } from '@prisma/client';
-import { prisma } from '@/db/prisma';
-import { AppError } from '@/errors/AppError';
-import { parsePagination, buildMeta, PaginationQuery } from '@/utils/queryBuilder';
+import { prisma } from '../../db/prisma';
+import { AppError } from '../../errors/AppError';
+import { parsePagination, buildMeta, PaginationQuery } from '../../utils/queryBuilder';
 
 const getOwnedCompanyProfile = async (userId: string) => {
   const companyProfile = await prisma.companyProfile.findUnique({
