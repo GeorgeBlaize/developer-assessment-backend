@@ -172,6 +172,17 @@
         },
         {
           "name": "List Users (Admin, paginated+search+filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data && json.data.length) { pm.environment.set('userId', json.data[0].id); }"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{baseUrl}}/users?page=1&limit=10&role=CANDIDATE&search=demo",
@@ -209,7 +220,24 @@
     {
       "name": "Plans",
       "item": [
-        { "name": "List Plans (Public)", "request": { "method": "GET", "url": "{{baseUrl}}/plans" } },
+        {
+          "name": "List Plans (Public)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data && json.data.length) {",
+                  "  const basic = json.data.find(p => p.name === 'BASIC') || json.data[0];",
+                  "  pm.environment.set('planId', basic.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "GET", "url": "{{baseUrl}}/plans" }
+        },
         {
           "name": "Create Plan (Admin)",
           "request": {
@@ -514,6 +542,17 @@
       "item": [
         {
           "name": "List Submissions For Assessment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data && json.data.length) { pm.environment.set('submissionId', json.data[0].id); }"
+                ]
+              }
+            }
+          ],
           "request": { "method": "GET", "url": "{{baseUrl}}/assessments/{{assessmentId}}/submissions?status=PENDING" }
         },
         {
