@@ -4,20 +4,25 @@ import { prisma } from '@/db/prisma';
 import { AppError } from '@/errors/AppError';
 
 const recomputeAttemptScore = async (attemptId: string) => {
-  const submissions = await prisma.submission.findMany({ where: { attemptId } });
-  const allGraded = submissions.every((s) => s.status !== 'PENDING');
-  const totalScore = submissions.reduce((sum, s) => sum + (s.awardedMarks ?? 0), 0);
-
-  if (!allGraded) {
-    await prisma.attempt.update({ where: { id: attemptId }, data: { totalScore } });
-    return;
-  }
-
   const attempt = await prisma.attempt.findUnique({
     where: { id: attemptId },
     include: { assessment: true },
   });
   if (!attempt) return;
+
+  const submissions = await prisma.submission.findMany({ where: { attemptId } });
+  const totalScore = submissions.reduce((sum, s) => sum + (s.awardedMarks ?? 0), 0);
+
+  // Only a finished attempt (candidate submitted, or the timer expired) can ever be fully
+  // "graded" -- while still IN_PROGRESS, every currently-submitted answer may happen to be
+  // auto-graded (e.g. only an MCQ answered so far) without the candidate being done at all.
+  const isFinished = attempt.status === 'SUBMITTED' || attempt.status === 'EXPIRED';
+  const allGraded = submissions.every((s) => s.status !== 'PENDING');
+
+  if (!isFinished || !allGraded) {
+    await prisma.attempt.update({ where: { id: attemptId }, data: { totalScore } });
+    return;
+  }
 
   await prisma.attempt.update({
     where: { id: attemptId },
