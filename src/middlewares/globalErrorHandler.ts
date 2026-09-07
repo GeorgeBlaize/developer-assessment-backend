@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
-import { config } from '../config';
 import { AppError } from '../errors/AppError';
 import { handleZodError } from '../errors/handleZodError';
 import { handlePrismaError } from '../errors/handlePrismaError';
@@ -37,15 +36,13 @@ export const globalErrorHandler = (
     errors = [{ path: '', message: err.message }];
   }
 
-  if (config.env === 'development') {
-    // eslint-disable-next-line no-console
-    console.error(err);
-  }
+  // Stack traces go to server-side logs only -- never to the client, in any environment.
+  // eslint-disable-next-line no-console
+  console.error(err);
 
   res.status(statusCode).json({
     success: false,
     message,
     errors,
-    stack: config.env === 'development' && err instanceof Error ? err.stack : undefined,
   });
 };
