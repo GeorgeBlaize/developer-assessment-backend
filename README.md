@@ -4,6 +4,14 @@ A RESTful API for recruitment skills evaluation: companies create coding/MCQ/wri
 
 Built for the B7A6 Level 2 Assignment 6 backend brief (Assignment #4: Developer Assessment Platform).
 
+## Live links
+
+| | |
+|---|---|
+| **Live API** | https://developer-assessment-backend.vercel.app |
+| **API Documentation (Postman)** | https://documenter.getpostman.com/view/55118777/2sBYAxP9DY |
+| **Postman collection (import into Postman)** | [`postman/collection.postman_collection.json`](./postman/collection.postman_collection.json) + [`postman/environment.postman_environment.json`](./postman/environment.postman_environment.json) |
+
 ## Tech stack
 
 - **Runtime**: Node.js, TypeScript, Express.js
@@ -12,7 +20,7 @@ Built for the B7A6 Level 2 Assignment 6 backend brief (Assignment #4: Developer 
 - **Validation**: Zod
 - **Payments**: SSLCommerz (sandbox), company subscription plans
 - **Security**: helmet, CORS, express-rate-limit, bcrypt password hashing
-- **Deployment**: Vercel serverless (Express app wrapped in `api/index.ts`)
+- **Deployment**: Vercel serverless (Express app wrapped in `api/server.ts`)
 
 ## Architecture
 
@@ -58,7 +66,7 @@ All endpoints live under `/api/v1`.
 - **Company dashboard**: plan/subscription status + counts
 - **Admin**: audit logs (paginated/filtered), platform stats
 
-Full request/response examples: import `postman/collection.postman_collection.json` + `postman/environment.postman_environment.json` into Postman.
+Full request/response examples: see the hosted [Postman documentation](https://documenter.getpostman.com/view/55118777/2sBYAxP9DY), or import `postman/collection.postman_collection.json` + `postman/environment.postman_environment.json` into Postman yourself.
 
 ## Key business rules
 
